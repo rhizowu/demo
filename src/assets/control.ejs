@@ -1,0 +1,178 @@
+<section id="control">
+  <div class="effect_btn">
+    <span class="efe_wrap">
+      EFFECT_<span class="on">on</span><span class="off">off</span>
+     </span> 
+    <span class="tbc_wrap">
+      To Be Confirmed
+     </span> 
+  </div>
+  <div class="elli_wrap">
+    <div class="stage">
+      <div class="bx close">
+        <a href="https://dtsp.site">
+        <?xml version="1.0" encoding="utf-8"?>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+           y="0px" viewBox="0 0 21.7 29.5" style="enable-background:new 0 0 21.7 29.5;" xml:space="preserve">
+        <style type="text/css">
+          .st0{fill:#E2B0C7;}
+          .st1{fill:#353535;}
+        </style>
+        <g>
+          <rect class="st0" width="21.7" height="5.3"/>
+          <path class="st1" d="M0,7.1h9.7c2.3,0,4.4,0.5,6.2,1.4c1.8,0.9,3.2,2.2,4.2,3.9c1,1.7,1.5,3.7,1.5,5.9c0,2.2-0.5,4.2-1.5,5.9
+            s-2.4,3-4.2,3.9c-1.8,0.9-3.9,1.4-6.2,1.4H0V7.1z M9.4,23.1c1.4,0,2.6-0.4,3.4-1.3c0.8-0.9,1.3-2,1.3-3.5c0-1.5-0.4-2.6-1.3-3.5
+            c-0.8-0.9-2-1.3-3.4-1.3h-2v9.6H9.4z"/>
+        </g>
+        </svg> 
+        </a>       
+      </div> 
+      <div class="bx tags">
+        <%- myData.tag %>  
+      </div>
+      <div class="bx map">
+          <a href="<%= myData.map %>" target="_blank" class="hover">
+            <img src="../images\ico_map.svg" alt="gmaps">
+          </a>
+      </div>
+      <div class="bx date">
+        <dl>
+          <dt>撮影日</dt>
+          <dd><%= myData.date %></dd>
+        </dl>
+        <dl>
+          <dt>更新日</dt>
+          <dd><%= myData.up %></dd>
+        </dl>
+      </div>
+      <section class="moreinfo_wrap">
+        <div class="bx moreinfo">
+          <div class="in">
+            <div class="circle"></div>
+            <aside>more</aside>
+          </div> 
+        </div>
+      </section>
+    </div>
+    <div class="elli">
+      <?xml version="1.0" encoding="utf-8"?>
+      <svg width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+       <circle cx="12" cy="17.5" r="1.5"/>
+       <circle cx="12" cy="12" r="1.5"/>
+       <circle cx="12" cy="6.5" r="1.5"/>
+       </svg> 
+    </div> 
+  </div>
+  <div class="more_zone">
+    <div class="in">
+      <div class="row tag">
+        <div class="tit">
+          <div class="cel">
+            REFERENCE
+          </div>  
+        </div>
+        <div class="bse">
+          <div class="in_tag cel"><%- myData.other %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>  
+  <script>
+    const buttonBox = document.querySelector('.effect_btn');
+    const cntl = document.getElementById('control');
+    buttonBox.addEventListener('click', () => {
+        cntl.classList.toggle("efe_on");
+    });
+    const elli = document.querySelector('.elli');
+    elli.addEventListener('click', () => {
+        cntl.classList.toggle("elli_on");
+        if(cntl.classList.contains("more_on")) {
+          tgt_more.click();
+        }
+    });
+  // slideUp
+const slideUp = (el, duration = 300) => {
+  el.style.height = el.offsetHeight + "px";
+  el.offsetHeight;
+  el.style.transitionProperty = "height, margin, padding";
+  el.style.transitionDuration = duration + "ms";
+  el.style.transitionTimingFunction = "ease";
+  el.style.overflow = "hidden";
+  el.style.height = 0;
+  el.style.paddingTop = 0;
+  el.style.paddingBottom = 0;
+  el.style.marginTop = 0;
+  el.style.marginBottom = 0;
+  setTimeout(() => {
+    el.style.display = "none";
+    el.style.removeProperty("height");
+    el.style.removeProperty("padding-top");
+    el.style.removeProperty("padding-bottom");
+    el.style.removeProperty("margin-top");
+    el.style.removeProperty("margin-bottom");
+    el.style.removeProperty("overflow");
+    el.style.removeProperty("transition-duration");
+    el.style.removeProperty("transition-property");
+    el.style.removeProperty("transition-timing-function");
+  }, duration);
+};
+
+// slideDown
+const slideDown = (el, duration = 300) => {
+  el.style.removeProperty("display");
+  let display = window.getComputedStyle(el).display;
+  if (display === "none") {
+    display = "block";
+  }
+  el.style.display = display;
+  let height = el.offsetHeight;
+  el.style.overflow = "hidden";
+  el.style.height = 0;
+  el.style.paddingTop = 0;
+  el.style.paddingBottom = 0;
+  el.style.marginTop = 0;
+  el.style.marginBottom = 0;
+  el.offsetHeight;
+  el.style.transitionProperty = "height, margin, padding";
+  el.style.transitionDuration = duration + "ms";
+  el.style.transitionTimingFunction = "ease";
+  el.style.height = height + "px";
+  el.style.removeProperty("padding-top");
+  el.style.removeProperty("padding-bottom");
+  el.style.removeProperty("margin-top");
+  el.style.removeProperty("margin-bottom");
+  setTimeout(() => {
+    el.style.removeProperty("height");
+    el.style.removeProperty("overflow");
+    el.style.removeProperty("transition-duration");
+    el.style.removeProperty("transition-property");
+    el.style.removeProperty("transition-timing-function");
+  }, duration);
+};
+
+// slideToggle
+const slideToggle = (el, duration = 300) => {
+  if (window.getComputedStyle(el).display === "none") {
+    return slideDown(el, duration);
+  } else {
+    return slideUp(el, duration);
+  }
+};
+const el = document.querySelector('.more_zone');
+    //
+    let tgt_more = document.querySelector(".bx.moreinfo .in");
+      tgt_more.addEventListener("click", function () {
+       this.classList.toggle("plus_show");
+       cntl.classList.toggle("more_on");
+       slideToggle(el, 300);
+    });
+//
+if (window.matchMedia && window.matchMedia('(max-device-width: 767px)').matches) {
+      let more = document.querySelector('.more_zone');
+      let more_clone = more.cloneNode(true);
+      let move_to = document.querySelector('.elli_wrap .stage');
+      move_to.appendChild(more_clone);
+  } 
+  //
+  </script> 

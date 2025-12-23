@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="jp">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="stylesheet" href="../app.css">
+<link rel="stylesheet" href="https://use.typekit.net/rrl3lhx.css">
+<link rel="icon" href="../favicon.png" type="image/png">
+<title>2025_1122_1157_tenomaee_DTSP</title>
+<style>
+.kyou_wrap{
+      width: 100%;
+    height: 100vh;
+    padding: 1vw 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 11;
+}
+#kyou_wrap_img {
+    display: block;
+    width: 78vw;
+    height: auto;
+    object-fit: contain;
+    margin-inline: auto;
+    opacity: 0;
+}
+.pp {
+  display: none;
+  position: fixed;
+  width: 40%;
+  height: 50vh;
+  background: #fff;
+  z-index: 30;
+}
+.pp.vis {
+  display: block;
+}
+.pp.no1 {
+  left: 50%;
+  top: 50%;
+  transform: translateX(-63.5%)
+             translateY(-65%);
+}
+.pp .in {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.pp .in iframe {
+ border: none;
+ margin: 0px;
+ width: 100%;
+ height: 100%;
+ overflow: hidden;
+}
+.pp .in .pp_close {
+  position: absolute;
+  top: 1.5%;
+  right:2.5%;
+  width: 40px;
+  height: 40px;
+  background: #FFF;
+  border: 1px solid #333;
+  cursor: pointer;
+}
+.pp .in .pp_close::before, .pp .in .pp_close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px; /* 棒の幅（太さ） */
+  height: 27px; /* 棒の高さ */
+  background: #333; /* バツ印の色 */
+}
+
+.pp .in .pp_close::before {
+  transform: translate(-50%,-50%) rotate(45deg);
+}
+
+.pp .in .pp_close::after {
+  transform: translate(-50%,-50%) rotate(-45deg);
+}
+
+</style>
+</head>
+<body>
+  <canvas id="gird-canvas"></canvas>
+  <div id="webgl"></div>
+  <% var myData = {date:'2025_1122_1157', up:'2025_1206', map:'https://earth.google.com/web/@35.7933904,139.6593819,4.02323797a,1000d,30y,0h,0t,0r/data=CgRCAggBMigKJgokCiAxak4wVmdnMk5FbGtMUllRMG9ZT3BpYTZXWG9qZHk5byACOgMKATJCAggASggI39-LmwEQAQ?authuser=2', tag:'<a href="https://dtsp.site/tag/tooth-area">#歯型圏</a>', other:'<a href="./" target="_blank">TBC</a>'}; %>
+  <%- include assets/control.ejs {myData} %>
+</body>
+<script id="v-shader" type="x-shader/x-vertex">
+  varying vec2 vUv;
+
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+</script>
+
+<script id="f-shader" type="x-shader/x-fragment">
+precision mediump float;
+uniform float u_saturation;
+uniform float u_thresholdValue;
+uniform float u_thresholdMix;
+uniform float u_grainMultiplier; // <== 新規追加: ノイズの強さ
+uniform sampler2D uTexture;
+
+varying vec2 vUv;
+
+float rand(vec2 uv) {
+    return fract(sin(dot(uv.xy, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+
+struct SaturationResult {
+    vec3 color;
+    float grayscale;
+};
+
+SaturationResult adjustSaturation(vec3 color, float value) {
+    const vec3 luminosityFactor = vec3(0.2126, 0.7152, 0.0722);
+    
+    float luminance = dot(color, luminosityFactor);
+    vec3 grayscale = vec3(luminance);
+
+    vec3 saturatedColor = mix(grayscale, color, 1.0 + value);
+
+    SaturationResult result;
+    result.color = saturatedColor;
+    result.grayscale = luminance;
+    
+    return result;
+}
+
+float threshold(float color, float thresholdValue) {
+    if (color > thresholdValue) {
+        return 1.0;
+    }
+    return 0.0;
+}
+
+void main() {
+    vec4 texel = texture2D(uTexture, vUv);
+    vec3 originalColor = texel.rgb;
+
+    SaturationResult satResult = adjustSaturation(originalColor, u_saturation);
+    vec3 saturatedColor = satResult.color;
+    float grayscale = satResult.grayscale;
+
+    float noise = (rand(vUv) / 9.0) * u_grainMultiplier;
+    
+    float finalBinaryValue = threshold(
+        grayscale + noise, // <== ノイズを加える
+        u_thresholdValue
+    );
+    vec3 finalBinaryColor = vec3(finalBinaryValue);
+
+    vec3 finalColor = mix(
+        saturatedColor,
+        finalBinaryColor,
+        u_thresholdMix
+    );
+    gl_FragColor = vec4(finalColor, texel.a);
+}
+</script>
+
+<script src="./app_2025_1122_1157.js" defer></script>
+<script src="../other/grid.js" defer></script>
+</html>
