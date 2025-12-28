@@ -15,7 +15,7 @@ export default class Obj_1 {
   init() {
       this._clicks();
       this.effect.init(this.stage.scene);
-      //this._setBg_base();
+      this._setBg_base();
     }
 
   _clicks() {
