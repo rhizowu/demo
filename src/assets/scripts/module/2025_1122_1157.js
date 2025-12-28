@@ -1,4 +1,5 @@
 import { DirectionalLight, PointLight, FogExp2, MeshPhongMaterial, PlaneGeometry, LinearFilter, TextureLoader, ShaderMaterial, Mesh} from 'three'
+import NoiseOverlay from './VanillaEffect.js';
 
 import { gsap, ScrollTrigger } from 'gsap/all';
 gsap.registerPlugin(ScrollTrigger); 
@@ -6,13 +7,15 @@ gsap.registerPlugin(ScrollTrigger);
 export default class Obj_1 {
   constructor(stage) {
     this.stage = stage;
+    this.effect = new NoiseOverlay();
 		this.geo_pos = [1.7, 1.7];
     this.textureMap = {};
   }
   
   init() {
       this._clicks();
-      this._setBg_base();
+      this.effect.init(this.stage.scene);
+      //this._setBg_base();
     }
 
   _clicks() {
@@ -135,5 +138,6 @@ export default class Obj_1 {
   }
 
   onRaf() {
+        this.effect.update();
   }
 }
